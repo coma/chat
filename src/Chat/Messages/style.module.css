@@ -1,0 +1,73 @@
+@value rightColor: #55efc4;
+@value leftColor: #eeeeee;
+@value thoughtColor: #999999;
+
+.messages {
+  flex: 1;
+  overflow: auto;
+  scroll-behavior: smooth;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.messages > li {
+  padding: 0 24px 24px 24px;
+  margin: 0;
+}
+
+.messages > li:first-child {
+  padding-top: 24px;
+}
+
+.messages > li::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.messages > li > div {
+  color: #000000;
+  position: relative;
+  padding: 16px;
+  border-radius: 6px;
+  line-height: 1.4;
+  max-width: 70%;
+  filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, .25));
+}
+
+.messages > li > div::before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  border: 10px solid transparent;
+}
+
+.messages > li.left > div {
+  background-color: leftColor;
+  float: left;
+}
+
+.messages > li.left > div::before {
+  border-right-color: leftColor;
+  border-bottom-color: leftColor;
+  right: 100%;
+  transform: translate(5px, 0);
+}
+
+.messages > li.right > div {
+  background-color: rightColor;
+  float: right;
+}
+
+.messages > li.right > div::before {
+  border-left-color: rightColor;
+  border-bottom-color: rightColor;
+  left: 100%;
+  transform: translate(-5px, 0);
+}
+
+.messages > li.thought > div {
+  color: thoughtColor;
+}
