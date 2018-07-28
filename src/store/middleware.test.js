@@ -33,7 +33,7 @@ describe('the middleware', () => {
     const sendAction = send('/foo 123');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenOnlyCalledWith({});
+    expect(next).toHaveBeenCalledWith({});
     expect(socket.emit).not.toHaveBeenCalled();
   });
 
@@ -45,8 +45,8 @@ describe('the middleware', () => {
     const nickAction = setNick('coma');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenOnlyCalledWith({});
-    expect(socket.emit).toHaveBeenCalledWidth('action', nickAction);
+    expect(next).toHaveBeenCalledWith({});
+    expect(socket.emit).toHaveBeenCalledWith('action', nickAction);
   });
 
   it('should send the think command', () => {
@@ -58,8 +58,8 @@ describe('the middleware', () => {
     const thinkAction = addMessage(id, 'wow', true, true);
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenOnlyCalledWith(thinkAction);
-    expect(socket.emit).toHaveBeenCalledWidth('action', thinkAction);
+    expect(next).toHaveBeenCalledWith(thinkAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', thinkAction);
   });
 
   it('should send the oops command', () => {
@@ -79,7 +79,20 @@ describe('the middleware', () => {
     const oopsAction = removeMessage('456def');
 
     expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenOnlyCalledWith(oopsAction);
-    expect(socket.emit).toHaveBeenCalledWidth('action', oopsAction);
+    expect(next).toHaveBeenCalledWith(oopsAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', oopsAction);
+  });
+
+  it('should not send the oops command if there are no messages to remove', () => {
+    const state = { messages: [] };
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const store = { getState: jest.fn(() => state) };
+    const sendAction = send('/oops');
+
+    expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith({});
+    expect(socket.emit).not.toHaveBeenCalled();
   });
 });
