@@ -13,7 +13,6 @@
   "bugs": {
     "url": "https://github.com/coma/chat/issues"
   },
-  "homepage": "https://github.com/coma/chat#readme",
   "dependencies": {
     "classnames": "^2.2.6",
     "koa": "^2.5.2",
@@ -31,7 +30,8 @@
     "react-scripts": "^2.0.0-next.3e165448"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "coverage": "npm test -- --coverage",
