@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -10,15 +10,41 @@ const className = ({ isMine, isAThought }) => classNames({
   [style.thought]: isAThought,
 });
 
-const Messages = ({ messages }) => (
-  <ul className={style.messages}>
-    {messages.map(message => (
-      <li key={message.id} className={className(message)}>
-        <div>{message.text}</div>
-      </li>
-    ))}
-  </ul>
-);
+class Messages extends Component {
+  constructor(props) {
+    super(props);
+    this.root = createRef();
+    this.scrollTop = 0;
+  }
+
+  getSnapshotBeforeUpdate(prevProps) {
+    const isAtTheBottom = this.root.current.scrollTop === this.scrollTop;
+    const moreMessages = prevProps.messages.length < this.props.messages.length;
+    const lastOneIsMine = this.props.messages[this.props.messages.length - 1].isMine;
+
+    return isAtTheBottom || (moreMessages && lastOneIsMine);
+  }
+
+  /* eslint-disable no-unused-vars */
+  componentDidUpdate(prevProps, prevState, autoScroll) {
+    this.scrollTop = this.root.current.scrollHeight - this.root.current.clientHeight;
+    if (autoScroll) {
+      this.root.current.scrollTop = this.scrollTop;
+    }
+  }
+
+  render() {
+    return (
+      <ul className={style.messages} ref={this.root}>
+        {this.props.messages.map(message => (
+          <li key={message.id} className={className(message)}>
+            <div>{message.text}</div>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+}
 
 Messages.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.shape({
