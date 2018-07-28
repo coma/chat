@@ -39,7 +39,7 @@ export default socket => store => next => action => {
 
     case OOPS_COMMAND: {
       const lastMessage = store.getState()
-        .messages.reverse().find(message => message.isMine);
+        .messages.slice().reverse().find(message => message.isMine);
 
       if (!lastMessage) {
         return next(empty);
