@@ -1,6 +1,6 @@
 import uuid from 'uuid/v4';
 import { send, addMessage, setNick, removeMessage } from './actions';
-import middleware from './middleware';
+import middleware, { empty } from './middleware';
 
 describe('the middleware', () => {
   it('should only act for SEND actions', () => {
@@ -33,7 +33,7 @@ describe('the middleware', () => {
     const sendAction = send('/foo 123');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith({});
+    expect(next).toHaveBeenCalledWith(empty);
     expect(socket.emit).not.toHaveBeenCalled();
   });
 
@@ -45,7 +45,7 @@ describe('the middleware', () => {
     const nickAction = setNick('coma');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith({});
+    expect(next).toHaveBeenCalledWith(empty);
     expect(socket.emit).toHaveBeenCalledWith('action', nickAction);
   });
 
@@ -92,7 +92,7 @@ describe('the middleware', () => {
     const sendAction = send('/oops');
 
     expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith({});
+    expect(next).toHaveBeenCalledWith(empty);
     expect(socket.emit).not.toHaveBeenCalled();
   });
 });
