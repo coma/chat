@@ -20,10 +20,11 @@ describe('the middleware', () => {
     const text = 'some text...';
     const sendAction = send(text);
     const addAction = addMessage(id, text, true);
+    const emitAction = addMessage(id, text, false);
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
     expect(next).toHaveBeenCalledWith(addAction);
-    expect(socket.emit).toHaveBeenCalledWith('action', addAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', emitAction);
   });
 
   it('should do nothing for unknown commands', () => {
@@ -54,12 +55,14 @@ describe('the middleware', () => {
     const next = jest.fn(() => nextState);
     const socket = { emit: jest.fn() };
     const id = uuid();
+    const text = 'wow';
     const sendAction = send('/think wow');
-    const thinkAction = addMessage(id, 'wow', true, true);
+    const thinkAction = addMessage(id, text, true, true);
+    const emitAction = addMessage(id, text, false, true);
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
     expect(next).toHaveBeenCalledWith(thinkAction);
-    expect(socket.emit).toHaveBeenCalledWith('action', thinkAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', emitAction);
   });
 
   it('should send the oops command', () => {

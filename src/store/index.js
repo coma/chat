@@ -9,4 +9,6 @@ const composed = compose(middlewares, devTools);
 const create = composed(createStore);
 const store = create(reducer);
 
+socket.on('action', store.dispatch);
+
 export default store;

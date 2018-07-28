@@ -16,9 +16,9 @@ export default socket => store => next => action => {
   const match = commandRegex.exec(text);
 
   if (!match) {
-    const action = addMessage(uuid(), text, true);
-    socket.emit('action', action);
-    return next(action);
+    const id = uuid();
+    socket.emit('action', addMessage(id, text, false));
+    return next(addMessage(id, text, true));
   }
 
   const command = match[1];
@@ -32,9 +32,9 @@ export default socket => store => next => action => {
     }
 
     case THINK_COMMAND: {
-      const action = addMessage(uuid(), content, true, true);
-      socket.emit('action', action);
-      return next(action);
+      const id = uuid();
+      socket.emit('action', addMessage(id, content, false, true));
+      return next(addMessage(id, content, true, true));
     }
 
     case OOPS_COMMAND: {
