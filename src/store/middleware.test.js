@@ -1,0 +1,85 @@
+import uuid from 'uuid/v4';
+import { send, addMessage, setNick, removeMessage } from './actions';
+import middleware from './middleware';
+
+describe('the middleware', () => {
+  it('should only act for SEND actions', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const action = { type: Symbol('some random type') };
+
+    expect(middleware()()(next)(action)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(action);
+  });
+
+  it('should add the text as message for regular text', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const id = uuid();
+    const text = 'some text...';
+    const sendAction = send(text);
+    const addAction = addMessage(id, text, true);
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(addAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', addAction);
+  });
+
+  it('should do nothing for unknown commands', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const sendAction = send('/foo 123');
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenOnlyCalledWith({});
+    expect(socket.emit).not.toHaveBeenCalled();
+  });
+
+  it('should send the nick command', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const sendAction = send('/nick coma');
+    const nickAction = setNick('coma');
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenOnlyCalledWith({});
+    expect(socket.emit).toHaveBeenCalledWidth('action', nickAction);
+  });
+
+  it('should send the think command', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const id = uuid();
+    const sendAction = send('/think wow');
+    const thinkAction = addMessage(id, 'wow', true, true);
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenOnlyCalledWith(thinkAction);
+    expect(socket.emit).toHaveBeenCalledWidth('action', thinkAction);
+  });
+
+  it('should send the oops command', () => {
+    const state = {
+      messages: [
+        { id: '123abc', isMine: true },
+        { id: '456def', isMine: true },
+        { id: '789ghi', isMine: false },
+      ]
+    };
+
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const store = { getState: jest.fn(() => state) };
+    const sendAction = send('/oops');
+    const oopsAction = removeMessage('456def');
+
+    expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenOnlyCalledWith(oopsAction);
+    expect(socket.emit).toHaveBeenCalledWidth('action', oopsAction);
+  });
+});
