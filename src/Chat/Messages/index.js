@@ -22,7 +22,7 @@ class Messages extends Component {
   getSnapshotBeforeUpdate(prevProps) {
     const isAtTheBottom = this.root.current.scrollTop === this.scrollTop;
     const moreMessages = prevProps.messages.length < this.props.messages.length;
-    const lastOneIsMine = this.props.messages[this.props.messages.length - 1].isMine;
+    const lastOneIsMine = this.props.messages.length && this.props.messages[this.props.messages.length - 1].isMine;
 
     return isAtTheBottom || (moreMessages && lastOneIsMine);
   }
