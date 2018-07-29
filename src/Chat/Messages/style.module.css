@@ -76,3 +76,8 @@ li.thought > div {
 .faded {
   opacity: 0.5;
 }
+
+/* same here... */
+.highlight {
+  font-size: 1.5em;
+}

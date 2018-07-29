@@ -5,9 +5,9 @@ export const send = text => ({
 });
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const addMessage = (id, text, isMine = true, isAThought = false) => ({
+export const addMessage = (id, text, isMine = true, isAThought = false, isHighlighted = false) => ({
   type: ADD_MESSAGE,
-  payload: { id, text, isMine, isAThought },
+  payload: { id, text, isMine, isAThought, isHighlighted },
 });
 
 export const SET_NICK = 'SET_NICK';

@@ -10,7 +10,7 @@ describe('the reducer', () => {
     const isMine = false;
     const isAThought = true;
     const action = addMessage(id, text, isMine, isAThought);
-    const current = { id, text, isMine, isAThought };
+    const current = { id, text, isMine, isAThought, isHighlighted: false };
 
     expect(reducer(state, action)).toEqual({ messages: [other, current] });
   });

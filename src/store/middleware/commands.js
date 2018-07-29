@@ -5,15 +5,18 @@ import empty from './empty';
 const commandRegex = /^\/([a-z]+) *(.*)?$/;
 const NICK_COMMAND = 'nick';
 const THINK_COMMAND = 'think';
+const HIGHLIGHT_COMMAND = 'highlight';
 const OOPS_COMMAND = 'oops';
 const FADE_COMMAND = 'fadelast';
+
+const trim = (text = '') => text.replace(/^ +/, '').replace(/ +$/, '');
 
 export default socket => store => next => action => {
   if (action.type !== SEND) {
     return next(action);
   }
 
-  const { text } = action.payload;
+  const text = trim(action.payload.text);
   const match = commandRegex.exec(text);
 
   if (!match) {
@@ -23,7 +26,7 @@ export default socket => store => next => action => {
   }
 
   const command = match[1];
-  const content = match[2];
+  const content = trim(match[2]);
 
   switch (command) {
     case NICK_COMMAND: {
@@ -33,9 +36,21 @@ export default socket => store => next => action => {
     }
 
     case THINK_COMMAND: {
+      if (!content) {
+        return next(empty());
+      }
       const id = uuid();
       socket.emit('action', addMessage(id, content, false, true));
       return next(addMessage(id, content, true, true));
+    }
+
+    case HIGHLIGHT_COMMAND: {
+      if (!content) {
+        return next(empty());
+      }
+      const id = uuid();
+      socket.emit('action', addMessage(id, content, false, false, true));
+      return next(addMessage(id, content, true, false, true));
     }
 
     case OOPS_COMMAND: {

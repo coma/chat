@@ -13,13 +13,24 @@ describe('the commands middleware', () => {
     expect(next).toHaveBeenCalledWith(action);
   });
 
+  it('should only act for content commands when there is content', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+
+    expect(middleware()()(next)(send('/think'))).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(empty());
+
+    expect(middleware()()(next)(send('/highlight    '))).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(empty());
+  });
+
   it('should add the text as message for regular text', () => {
     const nextState = Symbol('the next state...');
     const next = jest.fn(() => nextState);
     const socket = { emit: jest.fn() };
     const id = uuid();
     const text = 'some text...';
-    const sendAction = send(text);
+    const sendAction = send(`  ${text}   `);
     const addAction = addMessage(id, text, true);
     const emitAction = addMessage(id, text, false);
 
@@ -63,6 +74,21 @@ describe('the commands middleware', () => {
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
     expect(next).toHaveBeenCalledWith(thinkAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', emitAction);
+  });
+
+  it('should send the highlight command', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const id = uuid();
+    const text = 'wow';
+    const sendAction = send('/highlight wow');
+    const highlightAction = addMessage(id, text, true, false, true);
+    const emitAction = addMessage(id, text, false, false, true);
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(highlightAction);
     expect(socket.emit).toHaveBeenCalledWith('action', emitAction);
   });
 
