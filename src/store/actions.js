@@ -22,6 +22,12 @@ export const removeMessage = id => ({
   payload: { id },
 });
 
+export const FADE_MESSAGE = 'FADE_MESSAGE';
+export const fadeMessage = id => ({
+  type: FADE_MESSAGE,
+  payload: { id },
+});
+
 export const INDICATE_TYPING = 'INDICATE_TYPING';
 export const indicateTyping = (isTyping, isTheOther = false) => ({
   type: INDICATE_TYPING,

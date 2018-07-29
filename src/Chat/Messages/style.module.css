@@ -44,30 +44,35 @@
   border: 10px solid transparent;
 }
 
-.messages > li.left > div {
+li.left > div {
   background-color: leftColor;
   float: left;
 }
 
-.messages > li.left > div::before {
+li.left > div::before {
   border-right-color: leftColor;
   border-bottom-color: leftColor;
   right: 100%;
   transform: translate(5px, 0);
 }
 
-.messages > li.right > div {
+li.right > div {
   background-color: rightColor;
   float: right;
 }
 
-.messages > li.right > div::before {
+li.right > div::before {
   border-left-color: rightColor;
   border-bottom-color: rightColor;
   left: 100%;
   transform: translate(-5px, 0);
 }
 
-.messages > li.thought > div {
+li.thought > div {
   color: thoughtColor;
+}
+
+/* 10% was not appreciable... */
+.faded {
+  opacity: 0.5;
 }

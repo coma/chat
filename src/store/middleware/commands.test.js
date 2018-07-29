@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { send, addMessage, setNick, removeMessage } from '../actions';
+import { send, addMessage, setNick, removeMessage, fadeMessage } from '../actions';
 import empty from './empty';
 import middleware from './commands';
 
@@ -98,5 +98,26 @@ describe('the commands middleware', () => {
     expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
     expect(next).toHaveBeenCalledWith(empty());
     expect(socket.emit).not.toHaveBeenCalled();
+  });
+
+  it('should fade the last message', () => {
+    const state = {
+      messages: [
+        { id: '123abc', isMine: true },
+        { id: '456def', isMine: true },
+        { id: '789ghi', isMine: false },
+      ]
+    };
+
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const store = { getState: jest.fn(() => state) };
+    const sendAction = send('/fadelast');
+    const fadeAction = fadeMessage('456def');
+
+    expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(fadeAction);
+    expect(socket.emit).toHaveBeenCalledWith('action', fadeAction);
   });
 });

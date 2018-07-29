@@ -1,11 +1,12 @@
 import uuid from 'uuid/v4';
-import { SEND, addMessage, setNick, removeMessage } from '../actions';
+import { SEND, addMessage, setNick, removeMessage, fadeMessage } from '../actions';
 import empty from './empty';
 
 const commandRegex = /^\/([a-z]+) *(.*)?$/;
 const NICK_COMMAND = 'nick';
 const THINK_COMMAND = 'think';
 const OOPS_COMMAND = 'oops';
+const FADE_COMMAND = 'fadelast';
 
 export default socket => store => next => action => {
   if (action.type !== SEND) {
@@ -46,6 +47,19 @@ export default socket => store => next => action => {
       }
 
       const action = removeMessage(lastMessage.id);
+      socket.emit('action', action);
+      return next(action);
+    }
+
+    case FADE_COMMAND: {
+      const lastMessage = store.getState()
+        .messages.slice().reverse().find(message => message.isMine);
+
+      if (!lastMessage) {
+        return next(empty());
+      }
+
+      const action = fadeMessage(lastMessage.id);
       socket.emit('action', action);
       return next(action);
     }

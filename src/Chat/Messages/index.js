@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import style from './style.module.css';
 
-const className = ({ isMine, isAThought }) => classNames({
+const className = ({ isMine, isAThought, isFaded }) => classNames({
   [style.right]: isMine,
   [style.left]: !isMine,
   [style.thought]: isAThought,
+  [style.faded]: isFaded,
 });
 
 class Messages extends Component {
@@ -52,6 +53,7 @@ Messages.propTypes = {
     text: PropTypes.string.isRequired,
     isMine: PropTypes.bool.isRequired,
     isAThought: PropTypes.bool.isRequired,
+    isFaded: PropTypes.bool,
   })).isRequired,
 };
 

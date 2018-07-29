@@ -1,4 +1,4 @@
-import { ADD_MESSAGE, REMOVE_MESSAGE, SET_NICK, INDICATE_TYPING } from './actions';
+import { ADD_MESSAGE, REMOVE_MESSAGE, FADE_MESSAGE, SET_NICK, INDICATE_TYPING } from './actions';
 
 export default (state = { messages: [] }, { type, payload }) => {
   switch(type) {
@@ -10,6 +10,13 @@ export default (state = { messages: [] }, { type, payload }) => {
     case REMOVE_MESSAGE: {
       const messages = state.messages.filter(message => message.id !== payload.id);
       return { ...state, messages };
+    }
+
+    case FADE_MESSAGE: {
+      const { messages } = state;
+      const index = messages.findIndex(message => message.id === payload.id);
+      const message = { ...messages[index], isFaded: true };
+      return { ...state, messages: [...messages.slice(0, index), message, ...messages.slice(index + 1)] };
     }
 
     case SET_NICK:
