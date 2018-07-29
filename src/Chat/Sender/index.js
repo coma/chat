@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { send, indicateTyping } from '../../store/actions';
+import emoji from './emoji';
 import style from './style.module.css';
 
 class Sender extends Component {
@@ -13,7 +14,7 @@ class Sender extends Component {
   }
 
   onTextChange(event) {
-    const text = event.target.value;
+    const text = emoji(event.target.value);
     this.setState({ text });
     this.props.indicateTyping(text !== '');
   }
