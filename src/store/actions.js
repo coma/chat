@@ -21,3 +21,9 @@ export const removeMessage = id => ({
   type: REMOVE_MESSAGE,
   payload: { id },
 });
+
+export const INDICATE_TYPING = 'INDICATE_TYPING';
+export const indicateTyping = (isTyping, isTheOther = false) => ({
+  type: INDICATE_TYPING,
+  payload: { isTyping, isTheOther },
+});

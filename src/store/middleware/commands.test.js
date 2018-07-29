@@ -1,8 +1,9 @@
 import uuid from 'uuid/v4';
-import { send, addMessage, setNick, removeMessage } from './actions';
-import middleware, { empty } from './middleware';
+import { send, addMessage, setNick, removeMessage } from '../actions';
+import empty from './empty';
+import middleware from './commands';
 
-describe('the middleware', () => {
+describe('the commands middleware', () => {
   it('should only act for SEND actions', () => {
     const nextState = Symbol('the next state...');
     const next = jest.fn(() => nextState);
@@ -34,7 +35,7 @@ describe('the middleware', () => {
     const sendAction = send('/foo 123');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith(empty);
+    expect(next).toHaveBeenCalledWith(empty());
     expect(socket.emit).not.toHaveBeenCalled();
   });
 
@@ -46,7 +47,7 @@ describe('the middleware', () => {
     const nickAction = setNick('coma');
 
     expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith(empty);
+    expect(next).toHaveBeenCalledWith(empty());
     expect(socket.emit).toHaveBeenCalledWith('action', nickAction);
   });
 
@@ -95,7 +96,7 @@ describe('the middleware', () => {
     const sendAction = send('/oops');
 
     expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
-    expect(next).toHaveBeenCalledWith(empty);
+    expect(next).toHaveBeenCalledWith(empty());
     expect(socket.emit).not.toHaveBeenCalled();
   });
 });

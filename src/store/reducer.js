@@ -1,4 +1,4 @@
-import { ADD_MESSAGE, REMOVE_MESSAGE, SET_NICK } from './actions';
+import { ADD_MESSAGE, REMOVE_MESSAGE, SET_NICK, INDICATE_TYPING } from './actions';
 
 export default (state = { messages: [] }, { type, payload }) => {
   switch(type) {
@@ -14,6 +14,9 @@ export default (state = { messages: [] }, { type, payload }) => {
 
     case SET_NICK:
       return { ...state, other: payload.nick };
+
+    case INDICATE_TYPING:
+      return { ...state, isTyping: payload.isTyping };
 
     default:
       return state;

@@ -1,7 +1,7 @@
 import uuid from 'uuid/v4';
-import { SEND, addMessage, setNick, removeMessage } from './actions';
+import { SEND, addMessage, setNick, removeMessage } from '../actions';
+import empty from './empty';
 
-export const empty = { type: '' };
 const commandRegex = /^\/([a-z]+) *(.*)?$/;
 const NICK_COMMAND = 'nick';
 const THINK_COMMAND = 'think';
@@ -28,7 +28,7 @@ export default socket => store => next => action => {
     case NICK_COMMAND: {
       const action = setNick(content);
       socket.emit('action', action);
-      return next(empty);
+      return next(empty());
     }
 
     case THINK_COMMAND: {
@@ -42,7 +42,7 @@ export default socket => store => next => action => {
         .messages.slice().reverse().find(message => message.isMine);
 
       if (!lastMessage) {
-        return next(empty);
+        return next(empty());
       }
 
       const action = removeMessage(lastMessage.id);
@@ -51,6 +51,6 @@ export default socket => store => next => action => {
     }
 
     default:
-      return next(empty);
+      return next(empty());
   }
 };

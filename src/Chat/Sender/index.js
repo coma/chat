@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { send } from '../../store/actions';
+import { send, indicateTyping } from '../../store/actions';
 import style from './style.module.css';
 
 class Sender extends Component {
@@ -13,13 +13,16 @@ class Sender extends Component {
   }
 
   onTextChange(event) {
-    this.setState({ text: event.target.value });
+    const text = event.target.value;
+    this.setState({ text });
+    this.props.indicateTyping(text !== '');
   }
 
   onSend(event) {
     event.preventDefault();
-    this.props.send(this.state.text);
     this.setState({ text: '' });
+    this.props.send(this.state.text);
+    this.props.indicateTyping(false);
   }
 
   render() {
@@ -46,8 +49,9 @@ class Sender extends Component {
 
 Sender.propTypes = {
   send: PropTypes.func.isRequired,
+  indicateTyping: PropTypes.func.isRequired,
 };
 
-const actions = { send };
+const actions = { send, indicateTyping };
 
 export default connect(null, actions)(Sender);

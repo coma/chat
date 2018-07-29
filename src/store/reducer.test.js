@@ -1,4 +1,4 @@
-import { addMessage, removeMessage, setNick } from './actions';
+import { addMessage, removeMessage, setNick, indicateTyping } from './actions';
 import reducer from './reducer';
 
 describe('the reducer', () => {
@@ -29,5 +29,11 @@ describe('the reducer', () => {
     const action = setNick('coma');
 
     expect(reducer(undefined, action)).toEqual({ messages: [], other: 'coma' });
+  });
+
+  it('should indicate if the other is typing', () => {
+    const action = indicateTyping(true);
+
+    expect(reducer(undefined, action)).toEqual({ messages: [], isTyping: true });
   });
 });
