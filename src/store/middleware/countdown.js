@@ -17,7 +17,7 @@ export default store => next => action => {
       last = setTimeout(step, 1000 * seconds);
       seconds--;
     } else {
-      window.location.href = url;
+      window.location.assign(url);
     }
   };
 
