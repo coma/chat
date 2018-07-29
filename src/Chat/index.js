@@ -4,6 +4,7 @@ import store from '../store';
 import Nick from './Nick';
 import Messages from './Messages';
 import Sender from './Sender';
+import Countdown from './Countdown';
 import style from './style.module.css';
 
 const Chat = () => (
@@ -12,6 +13,7 @@ const Chat = () => (
       <Nick />
       <Messages />
       <Sender />
+      <Countdown />
     </div>
   </Provider>
 );

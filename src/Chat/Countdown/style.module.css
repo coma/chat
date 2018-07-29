@@ -1,0 +1,29 @@
+.countdown {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #f1c40f;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  animation: pulse 2s infinite;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
+}

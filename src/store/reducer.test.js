@@ -1,4 +1,4 @@
-import { addMessage, removeMessage, fadeMessage, setNick, indicateTyping } from './actions';
+import { addMessage, removeMessage, fadeMessage, setNick, indicateTyping, stepCountdown } from './actions';
 import reducer from './reducer';
 
 describe('the reducer', () => {
@@ -45,5 +45,11 @@ describe('the reducer', () => {
     const action = indicateTyping(true);
 
     expect(reducer(undefined, action)).toEqual({ messages: [], isTyping: true });
+  });
+
+  it('should set the countdown', () => {
+    const action = stepCountdown(4);
+
+    expect(reducer(undefined, action)).toEqual({ messages: [], countdown: 4 });
   });
 });

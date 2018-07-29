@@ -1,4 +1,4 @@
-import { ADD_MESSAGE, REMOVE_MESSAGE, FADE_MESSAGE, SET_NICK, INDICATE_TYPING } from './actions';
+import { ADD_MESSAGE, REMOVE_MESSAGE, FADE_MESSAGE, SET_NICK, INDICATE_TYPING, STEP_COUNTDOWN } from './actions';
 
 export default (state = { messages: [] }, { type, payload }) => {
   switch(type) {
@@ -24,6 +24,9 @@ export default (state = { messages: [] }, { type, payload }) => {
 
     case INDICATE_TYPING:
       return { ...state, isTyping: payload.isTyping };
+
+    case STEP_COUNTDOWN:
+      return { ...state, countdown: payload.seconds };
 
     default:
       return state;

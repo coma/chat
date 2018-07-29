@@ -33,3 +33,15 @@ export const indicateTyping = (isTyping, isTheOther = false) => ({
   type: INDICATE_TYPING,
   payload: { isTyping, isTheOther },
 });
+
+export const START_COUNTDOWN = 'START_COUNTDOWN';
+export const startCountdown = (seconds, url) => ({
+  type: START_COUNTDOWN,
+  payload: { seconds, url },
+});
+
+export const STEP_COUNTDOWN = 'STEP_COUNTDOWN';
+export const stepCountdown = (seconds) => ({
+  type: STEP_COUNTDOWN,
+  payload: { seconds },
+});

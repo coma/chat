@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { send, addMessage, setNick, removeMessage, fadeMessage } from '../actions';
+import { send, addMessage, setNick, removeMessage, fadeMessage, startCountdown } from '../actions';
 import empty from './empty';
 import middleware from './commands';
 
@@ -145,5 +145,28 @@ describe('the commands middleware', () => {
     expect(middleware(socket)(store)(next)(sendAction)).toBe(nextState);
     expect(next).toHaveBeenCalledWith(fadeAction);
     expect(socket.emit).toHaveBeenCalledWith('action', fadeAction);
+  });
+
+  it('should send the countdown command', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const sendAction = send('/countdown 5 https://comakai.com');
+    const countdownAction = startCountdown(5, 'https://comakai.com');
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(empty());
+    expect(socket.emit).toHaveBeenCalledWith('action', countdownAction);
+  });
+
+  it('should not send the countdown command if is not properly written', () => {
+    const nextState = Symbol('the next state...');
+    const next = jest.fn(() => nextState);
+    const socket = { emit: jest.fn() };
+    const sendAction = send('/countdown 5.3 https://comakai.com');
+
+    expect(middleware(socket)()(next)(sendAction)).toBe(nextState);
+    expect(next).toHaveBeenCalledWith(empty());
+    expect(socket.emit).not.toHaveBeenCalled();
   });
 });

@@ -1,13 +1,15 @@
 import uuid from 'uuid/v4';
-import { SEND, addMessage, setNick, removeMessage, fadeMessage } from '../actions';
+import { SEND, addMessage, setNick, removeMessage, fadeMessage, startCountdown } from '../actions';
 import empty from './empty';
 
 const commandRegex = /^\/([a-z]+) *(.*)?$/;
+const countdownRegex = /^([0-9]+) +(.+)$/;
 const NICK_COMMAND = 'nick';
 const THINK_COMMAND = 'think';
 const HIGHLIGHT_COMMAND = 'highlight';
 const OOPS_COMMAND = 'oops';
 const FADE_COMMAND = 'fadelast';
+const COUNTDOWN_COMMAND = 'countdown';
 
 const trim = (text = '') => text.replace(/^ +/, '').replace(/ +$/, '');
 
@@ -77,6 +79,16 @@ export default socket => store => next => action => {
       const action = fadeMessage(lastMessage.id);
       socket.emit('action', action);
       return next(action);
+    }
+    case COUNTDOWN_COMMAND: {
+      const match = countdownRegex.exec(content);
+      if (match) {
+        const seconds = Number.parseInt(match[1]);
+        const url = match[2];
+        const action = startCountdown(seconds, url);
+        socket.emit('action', action);
+      }
+      return next(empty());
     }
 
     default:
