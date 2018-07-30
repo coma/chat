@@ -1,5 +1,5 @@
 # Chat
-Just a chat app.
+Just a [chat app](https://chat-gwueirthkx.now.sh).
 
 ## Setup (node > 8)
 ```js

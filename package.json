@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Just a chat app.",
   "main": "index.js",
+  "homepage": "https://chat-gwueirthkx.now.sh",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coma/chat.git"
@@ -48,5 +49,13 @@
       "not op_mini all",
       "ie 11"
     ]
+  },
+  "engines": {
+   "node": "10.7.0"
+  },
+  "now": {
+    "engines": {
+      "node": "10.7.0"
+    }
   }
 }
